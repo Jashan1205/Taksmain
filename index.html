@@ -1,442 +1,238 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-      name="description"
-      content="TaskFlow - A modern task management system to boost your productivity and team collaboration."
-    />
-    <meta
-      name="keywords"
-      content="task management, productivity, collaboration, task flow, project management"
-    />
-    <meta name="author" content="ThisIsDeveloper" />
+  <meta name="description" content="TaskFlow - A modern task management system to boost your productivity and team collaboration.">
+  <meta name="keywords" content="task management, productivity, collaboration, task flow, project management">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="assets/icon.png" type="image/png">
+  
 
-    <!-- Favicon -->
-    <link rel="icon" href="assets/icon.png" type="image/png" />
-
-    <!-- Open Graph Meta Tags (For Facebook, WhatsApp, etc.) -->
-    <meta property="og:title" content="TaskFlow - Task Management System" />
-    <meta
-      property="og:description"
-      content="TaskFlow - A modern task management system to boost your productivity and team collaboration."
-    />
-    <meta
-      property="og:image"
-      content="https://taskflowapp.pages.dev/assets/icon.png"
-    />
-    <!-- Full URL to the icon -->
-    <meta property="og:url" content="https://taskflowapp.pages.dev/" />
-    <!-- Your website URL -->
-    <meta property="og:type" content="website" />
-
-    <!-- Twitter Card Meta Tags (For Twitter) -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="TaskFlow - Task Management System" />
-    <meta
-      name="twitter:description"
-      content="TaskFlow - A modern task management system to boost your productivity and team collaboration."
-    />
-    <meta
-      name="twitter:image"
-      content="https://taskflowapp.pages.dev/assets/icon.png"
-    />
-    <!-- Full URL to the icon -->
-
-    <title>TaskFlow - Modern Task Management</title>
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-      rel="stylesheet"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.min.css"
-    />
+  <title>TaskFlow - Modern Task Management</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.min.js"></script>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <!-- Welcome Screen -->
-    <div id="welcomeScreen" class="welcome-screen">
-      <div class="welcome-bg"></div>
-      <div class="container welcome-content">
-        <div class="row align-items-center">
-          <div class="col-lg-6 mb-5 mb-lg-0">
-            <h1 class="welcome-title">TaskFlow</h1>
-            <p class="welcome-subtitle">
-              A modern task management system to boost your productivity and
-              team collaboration.
-            </p>
-            <button
-              id="getStartedBtn"
-              class="btn btn-light btn-lg px-4 fw-bold"
-            >
-              Get Started
-            </button>
-          </div>
-          <div class="col-lg-6">
-            <div class="device-mockup-container">
-              <div class="mockup-navbar">
-                <div class="fw-bold">TaskFlow</div>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Welcome Screen -->
+  <div id="welcomeScreen" class="welcome-screen">
+    <div class="welcome-bg"></div>
+    <div class="container welcome-content">
+      <div class="row align-items-center">
+        <div class="col-lg-6 mb-5 mb-lg-0">
+          <h1 class="welcome-title">TaskFlow</h1>
+          <p class="welcome-subtitle">A modern task management system to boost your productivity and team collaboration.</p>
+          <button id="getStartedBtn" class="btn btn-light btn-lg px-4 fw-bold">Get Started</button>
+        </div>
+        <div class="col-lg-6">
+          <div class="device-mockup-container">
+            <div class="mockup-navbar">
+              <div class="fw-bold">TaskFlow</div>
+            </div>
+            <div class="mockup-board">
+              <div class="mockup-column">
+                <div class="mockup-card mt-4"></div>
+                <div class="mockup-card"></div>
+                <div class="mockup-card"></div>
               </div>
-              <div class="mockup-board">
-                <div class="mockup-column">
-                  <div class="mockup-card mt-4"></div>
-                  <div class="mockup-card"></div>
-                  <div class="mockup-card"></div>
-                </div>
-                <div class="mockup-column">
-                  <div class="mockup-card mt-4"></div>
-                  <div class="mockup-card"></div>
-                </div>
-                <div class="mockup-column">
-                  <div class="mockup-card mt-4"></div>
-                </div>
+              <div class="mockup-column">
+                <div class="mockup-card mt-4"></div>
+                <div class="mockup-card"></div>
+              </div>
+              <div class="mockup-column">
+                <div class="mockup-card mt-4"></div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Main App -->
-    <div id="appContainer">
-      <!-- Navigation -->
-      <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">
-            <img
-              src="assets/icon.png"
-              alt="TaskFlow"
-              style="width: 30px; height: 30px"
-              class="ms-2"
-            />
-            TaskFlow
-          </a>
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-              <li class="nav-item">
-                <a class="nav-link" href="#" id="addTaskBtn">
-                  <i class="fas fa-plus me-1"></i>Add Task
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#" id="addColumnBtn">
-                  <i class="fas fa-columns me-1"></i>Add Column
-                </a>
-              </li>
-              <li class="nav-item">
+  <!-- Main App -->
+  <div id="appContainer">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="assets/icon.png" alt="TaskFlow" style="width: 30px; height: 30px;" class="ms-2"> TaskFlow
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#" id="addTaskBtn">
+                <i class="fas fa-plus me-1"></i>Add Task
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" id="addColumnBtn">
+                <i class="fas fa-columns me-1"></i>Add Column
+              </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link reset-btn" href="#" id="deleteAllDataBtn">
                   <i class="fas fa-trash me-1"></i>Reset
                 </a>
-              </li>
-            </ul>
-            <form class="d-flex">
-              <div class="input-group">
-                <input
-                  class="form-control"
-                  type="search"
-                  placeholder="Search tasks..."
-                  aria-label="Search"
-                  id="searchInput"
-                />
-                <button
-                  title="search icon"
-                  class="btn btn-outline-primary"
-                  type="button"
-                >
-                  <i class="fas fa-search"></i>
-                </button>
-              </div>
-            </form>
-            <button
-              class="dark-mode-toggle"
-              id="darkModeToggle"
-              aria-label="Toggle dark mode"
-              title="Toggle dark mode"
-            >
-              <i class="fas fa-moon"></i>
-            </button>
-          </div>
-        </div>
-      </nav>
-
-      <!-- Board Container -->
-      <div class="board-container">
-        <div class="container-fluid">
-          <div class="board" id="board">
-            <!-- Columns will be added here dynamically -->
-          </div>
+              </li>              
+          </ul>
+          <form class="d-flex">
+            <div class="input-group">
+              <input class="form-control" type="search" placeholder="Search tasks..." aria-label="Search" id="searchInput">
+              <button title="124" class="btn btn-outline-primary" type="button">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </form>
+          <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+            <i class="fas fa-moon"></i>
+          </button>
         </div>
       </div>
-
-      <!-- Floating Add Button (Mobile) -->
-      <button
-        class="floating-add-btn"
-        id="floatingAddBtn"
-        aria-label="Add new task"
-      >
-        <i class="fas fa-plus"></i>
-      </button>
-    </div>
-
-    <!-- Add/Edit Task Modal -->
-    <div
-      class="modal fade"
-      id="taskModal"
-      tabindex="-1"
-      aria-labelledby="taskModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="taskModalLabel">Add New Task</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <form id="taskForm">
-              <input type="hidden" id="taskId" />
-              <input type="hidden" id="columnId" />
-
-              <div class="mb-3">
-                <label for="taskTitle" class="form-label">Task Title*</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="taskTitle"
-                  required
-                />
-              </div>
-
-              <div class="mb-3">
-                <label for="taskDescription" class="form-label"
-                  >Description</label
-                >
-                <textarea
-                  class="form-control"
-                  id="taskDescription"
-                  rows="3"
-                ></textarea>
-              </div>
-
-              <div class="row">
-                <div class="col-md-6 mb-3">
-                  <label for="taskPriority" class="form-label">Priority</label>
-                  <select class="form-select" id="taskPriority">
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                  </select>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                  <label for="taskDueDate" class="form-label">Due Date</label>
-                  <input type="date" class="form-control" id="taskDueDate" />
-                </div>
-              </div>
-
-              <div class="mb-3">
-                <label for="taskAssignee" class="form-label">Assign To</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="taskAssignee"
-                  placeholder="Enter name"
-                />
-              </div>
-
-              <div class="mb-3">
-                <label for="taskTags" class="form-label">Tags</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="taskTags"
-                  placeholder="Separate tags with commas"
-                />
-                <small class="text-muted"
-                  >Example: Design, Frontend, Documentation</small
-                >
-              </div>
-
-              <div class="mb-3">
-                <label class="form-label">Attachments</label>
-                <div class="input-group mb-2">
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="attachmentName"
-                    placeholder="Attachment name"
-                  />
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="attachmentUrl"
-                    placeholder="URL (optional)"
-                  />
-                  <button
-                    type="button"
-                    class="btn btn-outline-secondary"
-                    id="addAttachmentBtn"
-                  >
-                    Add
-                  </button>
-                </div>
-                <div id="attachmentsList" class="mb-2"></div>
-              </div>
-
-              <div class="mb-3">
-                <label class="form-label">Subtasks / Checklist</label>
-                <div class="input-group mb-2">
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="subtaskText"
-                    placeholder="Subtask description"
-                  />
-                  <button
-                    type="button"
-                    class="btn btn-outline-secondary"
-                    id="addSubtaskBtn"
-                  >
-                    Add
-                  </button>
-                </div>
-                <div id="subtasksList"></div>
-              </div>
-
-              <div class="mb-3">
-                <label class="form-label">Comments</label>
-                <div class="input-group mb-2">
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="commentText"
-                    placeholder="Add a comment"
-                  />
-                  <button
-                    type="button"
-                    class="btn btn-outline-secondary"
-                    id="addCommentBtn"
-                  >
-                    Add
-                  </button>
-                </div>
-                <div id="commentsList"></div>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-outline-danger me-auto"
-              id="deleteTaskBtn"
-            >
-              Delete
-            </button>
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Cancel
-            </button>
-            <button type="button" class="btn btn-primary" id="saveTaskBtn">
-              Save Task
-            </button>
-          </div>
+    </nav>
+    
+    <!-- Board Container -->
+    <div class="board-container">
+      <div class="container-fluid">
+        <div class="board" id="board">
+          <!-- Columns will be added here dynamically -->
         </div>
       </div>
     </div>
-
-    <!-- Column Modal -->
-    <div
-      class="modal fade"
-      id="columnModal"
-      tabindex="-1"
-      aria-labelledby="columnModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="columnModalLabel">Add New Column</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <form id="columnForm">
-              <input type="hidden" id="editColumnId" />
-              <div class="mb-3">
-                <label for="columnTitle" class="form-label"
-                  >Column Title*</label
-                >
-                <input
-                  type="text"
-                  class="form-control"
-                  id="columnTitle"
-                  required
-                />
+    
+    <!-- Floating Add Button (Mobile) -->
+    <button class="floating-add-btn" id="floatingAddBtn" aria-label="Add new task">
+      <i class="fas fa-plus"></i>
+    </button>
+  </div>
+  
+  <!-- Add/Edit Task Modal -->
+  <div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="taskModalLabel">Add New Task</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="taskForm">
+            <input type="hidden" id="taskId">
+            <input type="hidden" id="columnId">
+            
+            <div class="mb-3">
+              <label for="taskTitle" class="form-label">Task Title*</label>
+              <input type="text" class="form-control" id="taskTitle" required>
+            </div>
+            
+            <div class="mb-3">
+              <label for="taskDescription" class="form-label">Description</label>
+              <textarea class="form-control" id="taskDescription" rows="3"></textarea>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="taskPriority" class="form-label">Priority</label>
+                <select class="form-select" id="taskPriority">
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                </select>
               </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-outline-danger me-auto"
-              id="deleteColumnBtn"
-            >
-              Delete
-            </button>
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Cancel
-            </button>
-            <button type="button" class="btn btn-primary" id="saveColumnBtn">
-              Save Column
-            </button>
-          </div>
+              
+              <div class="col-md-6 mb-3">
+                <label for="taskDueDate" class="form-label">Due Date</label>
+                <input type="date" class="form-control" id="taskDueDate">
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="taskAssignee" class="form-label">Assign To</label>
+              <input type="text" class="form-control" id="taskAssignee" placeholder="Enter name">
+            </div>
+            
+            <div class="mb-3">
+              <label for="taskTags" class="form-label">Tags</label>
+              <input type="text" class="form-control" id="taskTags" placeholder="Separate tags with commas">
+              <small class="text-muted">Example: Design, Frontend, Documentation</small>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Attachments</label>
+              <div class="input-group mb-2">
+                <input type="text" class="form-control" id="attachmentName" placeholder="Attachment name">
+                <input type="text" class="form-control" id="attachmentUrl" placeholder="URL (optional)">
+                <button type="button" class="btn btn-outline-secondary" id="addAttachmentBtn">Add</button>
+              </div>
+              <div id="attachmentsList" class="mb-2"></div>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Subtasks / Checklist</label>
+              <div class="input-group mb-2">
+                <input type="text" class="form-control" id="subtaskText" placeholder="Subtask description">
+                <button type="button" class="btn btn-outline-secondary" id="addSubtaskBtn">Add</button>
+              </div>
+              <div id="subtasksList"></div>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Comments</label>
+              <div class="input-group mb-2">
+                <input type="text" class="form-control" id="commentText" placeholder="Add a comment">
+                <button type="button" class="btn btn-outline-secondary" id="addCommentBtn">Add</button>
+              </div>
+              <div id="commentsList"></div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-danger me-auto" id="deleteTaskBtn">Delete</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="saveTaskBtn">Save Task</button>
         </div>
       </div>
     </div>
+  </div>
+  
+  <!-- Column Modal -->
+  <div class="modal fade" id="columnModal" tabindex="-1" aria-labelledby="columnModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="columnModalLabel">Add New Column</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="columnForm">
+            <input type="hidden" id="editColumnId">
+            <div class="mb-3">
+              <label for="columnTitle" class="form-label">Column Title*</label>
+              <input type="text" class="form-control" id="columnTitle" required>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-danger me-auto" id="deleteColumnBtn">Delete</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="saveColumnBtn">Save Column</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="scripts.js"></script>
-  </body>
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="scripts.js"></script>
+  
+</body>
 </html>

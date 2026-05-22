@@ -106,6 +106,9 @@ body {
   box-shadow: 0 1px 3px var(--shadow-color);
   cursor: grab;
   transition: all 0.2s;
+  overflow: hidden;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .task-card:hover {
@@ -121,12 +124,20 @@ body {
   font-weight: 500;
   margin-bottom: 0.5rem;
   font-size: 0.95rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .task-description {
   color: var(--text-muted);
   font-size: 0.85rem;
   margin-bottom: 0.5rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .task-meta {
@@ -135,6 +146,9 @@ body {
   align-items: center;
   font-size: 0.75rem;
   margin-top: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  overflow-wrap: break-word;
 }
 
 .task-priority {
@@ -448,8 +462,13 @@ body {
   padding: 2px 8px;
   border-radius: 20px;
   margin-right: 5px;
+  margin-bottom: 4px;
   background-color: rgba(99, 102, 241, 0.1);
   color: var(--primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
 }
 
 /* Attachment style */

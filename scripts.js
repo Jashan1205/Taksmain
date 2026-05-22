@@ -33,6 +33,115 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+// API FUNCTIONS
+async function fetchTasksFromAPI() {
+  try {
+    // Fetch open issues from React GitHub repository
+    const response = await fetch(
+      "https://api.github.com/repos/facebook/react/issues?state=open&sort=created&order=desc&per_page=8",
+      {
+        headers: {
+          Accept: "application/vnd.github.v3+json",
+        },
+      },
+    );
+    if (!response.ok) throw new Error("Failed to fetch tasks from GitHub");
+    const apiTasks = await response.json();
+    return apiTasks;
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    Swal.fire(
+      "Error",
+      "Failed to fetch development tasks from GitHub API",
+      "error",
+    );
+    return [];
+  }
+}
+
+function convertApiTaskToBoard(apiTask, columnId) {
+  const priorities = ["low", "medium", "high"];
+
+  // Determine priority based on labels
+  let priority = "medium";
+  if (apiTask.labels && apiTask.labels.length > 0) {
+    const labels = apiTask.labels.map((l) => l.name.toLowerCase());
+    if (labels.some((l) => l.includes("bug"))) priority = "high";
+    else if (
+      labels.some((l) => l.includes("feature") || l.includes("enhancement"))
+    )
+      priority = "medium";
+    else if (
+      labels.some((l) => l.includes("documentation") || l.includes("chore"))
+    )
+      priority = "low";
+  }
+
+  // Create due date based on when issue was created
+  const createdDate = new Date(apiTask.created_at);
+  const dueDateString = createdDate.toISOString().split("T")[0];
+
+  // Extract tags from GitHub labels
+  const tags = apiTask.labels ? apiTask.labels.map((label) => label.name) : [];
+  tags.push("GitHub Issue");
+
+  return {
+    id: generateUUID(),
+    columnId,
+    title: apiTask.title,
+    description: apiTask.body
+      ? apiTask.body.substring(0, 200)
+      : `Issue #${apiTask.number} - ${apiTask.html_url}`,
+    priority,
+    dueDate: dueDateString,
+    assignee: apiTask.assignee ? apiTask.assignee.login : "Unassigned",
+    tags,
+    attachments: [],
+    subtasks: [],
+    comments: [],
+    createdAt: new Date().toISOString(),
+  };
+}
+
+async function addFetchedTasksToColumn(columnId) {
+  const todoColumn = boardData.columns.find((col) => col.title === "To Do");
+  if (!todoColumn) {
+    Swal.fire("Error", "To Do column not found", "error");
+    return;
+  }
+
+  // Show loading message
+  Swal.fire({
+    title: "Fetching React Development Tasks...",
+    html: "Loading open issues from React GitHub repository",
+    allowOutsideClick: false,
+    didOpen: async () => {
+      Swal.showLoading();
+      const apiTasks = await fetchTasksFromAPI();
+      if (apiTasks.length > 0) {
+        // Convert and add tasks
+        apiTasks.forEach((apiTask) => {
+          const boardTask = convertApiTaskToBoard(apiTask, todoColumn.id);
+          boardData.tasks.push(boardTask);
+        });
+        saveData();
+        renderBoard();
+        Swal.fire(
+          "Success!",
+          `Added ${apiTasks.length} React development tasks to To Do column!`,
+          "success",
+        );
+      } else {
+        Swal.fire(
+          "No tasks found",
+          "Could not fetch tasks from GitHub API",
+          "warning",
+        );
+      }
+    },
+  });
+}
+
 // DATA MANAGEMENT
 let boardData = {
   columns: [],
@@ -71,12 +180,12 @@ function renderBoard() {
 
   // Sort columns by order
   const sortedColumns = [...boardData.columns].sort(
-    (a, b) => a.order - b.order
+    (a, b) => a.order - b.order,
   );
 
   sortedColumns.forEach((column) => {
     const columnTasks = boardData.tasks.filter(
-      (task) => task.columnId === column.id
+      (task) => task.columnId === column.id,
     );
     const columnElement = createColumnElement(column, columnTasks);
     boardElement.appendChild(columnElement);
@@ -132,11 +241,26 @@ function createColumnElement(column, tasks) {
   // Column footer
   const columnFooter = document.createElement("div");
   columnFooter.className = "column-footer";
-  columnFooter.innerHTML = `
-    <button class="btn btn-sm add-task-btn" data-column-id="${column.id}">
-      <i class="fas fa-plus me-2"></i>Add task
-    </button>
-  `;
+
+  // Add special button for "To Do" column
+  if (column.title === "To Do") {
+    columnFooter.innerHTML = `
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="btn btn-sm add-task-btn" data-column-id="${column.id}">
+          <i class="fas fa-plus me-2"></i>Add task
+        </button>
+        <button class="btn btn-sm fetch-tasks-btn" data-column-id="${column.id}" style="background-color: #6366f1; color: white; border: none;">
+          <i class="fas fa-download me-2"></i>Fetch Tasks
+        </button>
+      </div>
+    `;
+  } else {
+    columnFooter.innerHTML = `
+      <button class="btn btn-sm add-task-btn" data-column-id="${column.id}">
+        <i class="fas fa-plus me-2"></i>Add task
+      </button>
+    `;
+  }
 
   // Append all parts to column
   columnElement.appendChild(columnHeader);
@@ -153,6 +277,16 @@ function createColumnElement(column, tasks) {
   columnElement
     .querySelector(".add-task-btn")
     .addEventListener("click", () => openTaskModal(null, column.id));
+
+  // Add fetch tasks button listener for "To Do" column
+  if (column.title === "To Do") {
+    const fetchBtn = columnElement.querySelector(".fetch-tasks-btn");
+    if (fetchBtn) {
+      fetchBtn.addEventListener("click", () =>
+        addFetchedTasksToColumn(column.id),
+      );
+    }
+  }
 
   return columnElement;
 }
@@ -196,8 +330,8 @@ function createTaskCard(task) {
       </div>
       <div class="mt-1 text-muted" style="font-size: 0.75rem;">
         ${task.subtasks.filter((st) => st.completed).length}/${
-            task.subtasks.length
-          } subtasks
+          task.subtasks.length
+        } subtasks
       </div>
     `
         : ""
@@ -205,8 +339,8 @@ function createTaskCard(task) {
     
     <div class="task-meta">
       <span class="task-priority priority-${task.priority || "low"}">${
-    task.priority || "low"
-  }</span>
+        task.priority || "low"
+      }</span>
       
       ${
         task.dueDate
@@ -222,8 +356,8 @@ function createTaskCard(task) {
         task.assignee
           ? `
         <span class="task-assignee" title="${escapeHtml(task.assignee)}">${getInitials(
-              task.assignee
-            )}</span>
+          task.assignee,
+        )}</span>
       `
           : ""
       }
@@ -355,7 +489,7 @@ function handleColumnDragStart(e) {
   const onColumnDragEnd = () => {
     // Update column order in data model
     const newColumnOrder = Array.from(
-      board.querySelectorAll(".board-column")
+      board.querySelectorAll(".board-column"),
     ).map((col, idx) => {
       const columnId = col.dataset.columnId;
       const column = boardData.columns.find((c) => c.id === columnId);
@@ -378,11 +512,11 @@ function handleColumnDragStart(e) {
 function updateColumnTaskCounts() {
   boardData.columns.forEach((column) => {
     const columnElement = document.querySelector(
-      `.board-column[data-column-id="${column.id}"]`
+      `.board-column[data-column-id="${column.id}"]`,
     );
     if (columnElement) {
       const taskCount = boardData.tasks.filter(
-        (t) => t.columnId === column.id
+        (t) => t.columnId === column.id,
       ).length;
       columnElement.querySelector(".column-task-count").textContent = taskCount;
     }
@@ -467,7 +601,7 @@ function saveTask() {
 
   // Get attachments
   const attachmentsElements = document.querySelectorAll(
-    "#attachmentsList .task-attachment"
+    "#attachmentsList .task-attachment",
   );
   const attachments = Array.from(attachmentsElements).map((el) => ({
     name: el.dataset.name,
@@ -476,7 +610,7 @@ function saveTask() {
 
   // Get subtasks
   const subtaskElements = document.querySelectorAll(
-    "#subtasksList .checklist-item"
+    "#subtasksList .checklist-item",
   );
   const subtasks = Array.from(subtaskElements).map((el) => ({
     text: el.querySelector("label").textContent,
@@ -485,7 +619,7 @@ function saveTask() {
 
   // Get comments
   const commentElements = document.querySelectorAll(
-    "#commentsList .task-comment"
+    "#commentsList .task-comment",
   );
   const comments = Array.from(commentElements).map((el) => ({
     author: el.querySelector(".comment-author").textContent,
@@ -547,7 +681,7 @@ function saveTask() {
 
   // Close modal
   const taskModal = bootstrap.Modal.getInstance(
-    document.getElementById("taskModal")
+    document.getElementById("taskModal"),
   );
   taskModal.hide();
 }
@@ -556,30 +690,28 @@ function deleteTask(taskId) {
   if (!taskId) return;
 
   Swal.fire({
-    title: 'Are you sure?',
+    title: "Are you sure?",
     text: "This will delete the task permanently.",
-    icon: 'warning',
+    icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'Yes, delete task!',
-    cancelButtonText: 'Cancel'
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Yes, delete task!",
+    cancelButtonText: "Cancel",
   }).then((result) => {
     if (result.isConfirmed) {
       boardData.tasks = boardData.tasks.filter((task) => task.id !== taskId);
       saveData();
       renderBoard();
 
-      const taskModal = bootstrap.Modal.getInstance(document.getElementById("taskModal"));
+      const taskModal = bootstrap.Modal.getInstance(
+        document.getElementById("taskModal"),
+      );
       if (taskModal) {
         taskModal.hide();
       }
 
-      Swal.fire(
-        'Deleted!',
-        'Task has been deleted.',
-        'success'
-      );
+      Swal.fire("Deleted!", "Task has been deleted.", "success");
     }
   });
 }
@@ -670,7 +802,7 @@ function addCommentToList(author, text, date = null) {
 // COLUMN MODAL FUNCTIONS
 function openColumnModal(column = null) {
   const columnModal = new bootstrap.Modal(
-    document.getElementById("columnModal")
+    document.getElementById("columnModal"),
   );
   const form = document.getElementById("columnForm");
   const modalTitle = document.getElementById("columnModalLabel");
@@ -729,7 +861,7 @@ function saveColumn() {
 
   // Close modal
   const columnModal = bootstrap.Modal.getInstance(
-    document.getElementById("columnModal")
+    document.getElementById("columnModal"),
   );
   columnModal.hide();
 }
@@ -738,20 +870,20 @@ function deleteColumn(columnId) {
   if (!columnId) return;
 
   Swal.fire({
-    title: 'Are you sure?',
-    text: 'All tasks in this column will be deleted.',
-    icon: 'warning',
+    title: "Are you sure?",
+    text: "All tasks in this column will be deleted.",
+    icon: "warning",
     showCancelButton: true,
-    confirmButtonText: 'Yes, delete it!',
-    cancelButtonText: 'Cancel',
+    confirmButtonText: "Yes, delete it!",
+    cancelButtonText: "Cancel",
   }).then((result) => {
     if (result.isConfirmed) {
       boardData.columns = boardData.columns.filter(
-        (column) => column.id !== columnId
+        (column) => column.id !== columnId,
       );
 
       boardData.tasks = boardData.tasks.filter(
-        (task) => task.columnId !== columnId
+        (task) => task.columnId !== columnId,
       );
 
       boardData.columns.forEach((column, index) => {
@@ -762,10 +894,10 @@ function deleteColumn(columnId) {
       renderBoard();
 
       const columnModal = bootstrap.Modal.getInstance(
-        document.getElementById("columnModal")
+        document.getElementById("columnModal"),
       );
       if (columnModal) columnModal.hide();
-      Swal.fire('Deleted!', 'Your column has been deleted.', 'success');
+      Swal.fire("Deleted!", "Your column has been deleted.", "success");
     }
   });
 }
@@ -807,7 +939,9 @@ function searchTasks(query) {
   // Show "no results" message in columns where all tasks are hidden
   document.querySelectorAll(".tasks-container").forEach((container) => {
     const allCards = container.querySelectorAll(".task-card");
-    const hiddenCards = container.querySelectorAll('.task-card[style*="display: none"]');
+    const hiddenCards = container.querySelectorAll(
+      '.task-card[style*="display: none"]',
+    );
     if (allCards.length > 0 && allCards.length === hiddenCards.length) {
       const msg = document.createElement("div");
       msg.className = "no-results-msg text-center text-muted py-3";
@@ -964,7 +1098,7 @@ document.addEventListener("DOMContentLoaded", function () {
           Swal.fire(
             "Deleted!",
             "All data has been deleted and reset.",
-            "success"
+            "success",
           );
         }
       });
